@@ -1,0 +1,545 @@
+<!--===========================================================
+                      Molie Only Header Start
+=========================================================== -->
+<section class="shop_navbar xs_sc">
+<nav class="shop_nav" [ngClass]="{'white_nav': pageSetting[0] == 'header-1' ? true : false, 'dark_nav': pageSetting[0] == 'header-2'}">
+        <div class="logo">
+            <a routerLink="">
+                <div class="media">
+                    <div class="media-left">
+                        <img src="{{shop.logo}}" class="img-responsive" />
+                    </div>
+                    <div class="media-body">
+                        <h3 class="media-heading">{{shop.name}}</h3>
+                        <span>{{shop.slogan || 'slogan'}}</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="xs_cart">
+            <a routerLink="/cart">
+                <img src="../../assets/img/icon_cart.svg" alt="shop icon cart"> <span class="badge">{{cartAndWishListCount.cart || 0}}</span>
+            </a>
+        </div>
+        <div id="menuToggle">
+                <input class="checkbox" type="checkbox" />
+                <span class="shopicon"></span>
+                <span class="shopicon"></span>
+                <span class="shopicon"></span> 
+            <ul class="nav navbar-nav" id="menu">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> 
+                        Shop  <i class="fa fa-angle-down"></i> 
+                    </a>
+                    <ul class="dropdown-menu submenu">
+                            <li> <a routerLink="/catalogue"> All Category </a></li>
+                            <li> <a href="#"> Category 1 </a></li>
+                            <li> <a href="#"> Category 2 </a></li>
+                            <li> <a href="#"> Category 3 </a></li>
+                            <li> <a href="#"> Category 4 </a></li>
+                            <li> <a href="#"> Category 5 </a></li>
+                            <li> <a href="#"> Category 1 </a></li>
+                            <li> <a href="#"> Category 2 </a></li>
+                            <li> <a href="#"> Category 3 </a></li>
+                            <li> <a href="#"> Category 4 </a></li>
+                            <li> <a href="#"> Category 5 </a></li>
+                            <li> <a href="#"> Category 1 </a></li>
+                            <li> <a href="#"> Category 2 </a></li>
+                            <li> <a href="#"> Category 3 </a></li>
+                            <li> <a href="#"> Category 4 </a></li>
+                            <li> <a href="#"> Category 5 </a></li>
+                            <li> <a href="#"> Category 1 </a></li>
+                            <li> <a href="#"> Category 2 </a></li>
+                            <li> <a href="#"> Category 3 </a></li>
+                            <li> <a href="#"> Category 4 </a></li>
+                            <li> <a href="#"> Category 5 </a></li>
+                    </ul>
+                </li>
+                <!-- <li class="active"> <a routerLink="/catalogue"> Shop </a></li> -->
+                <li> <a *ngIf="haveCustomProductFeature" routerLink="/catalogue/custom"> Customize </a></li>
+                <li> <a routerLink="/quotations" *ngIf="loggedIn && haveQuotationFeature">  Quotation </a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">  Track Order  <i class="fa fa-angle-down"></i> </a>
+                    <ul class="dropdown-menu trackingid">
+                        <li>
+                            <form (ngSubmit)="checkOrderStatus()" name="form" #checkOrderStatusForm="ngForm" novalidate>
+                                <div *ngIf="statusErrorMessage" class="alert alert-danger">
+                                    {{ statusErrorMessage }}
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="email" class="form-control" placeholder="Email Address" name="email" [ngModel]="orderCheckEmail" (ngModelChange)="checkOrderEmailChange($event)">
+                                            <span>{{orderCheckEmailError}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="text" class="form-control" placeholder="Order ID" [(ngModel)]="orderCheckId" name="orderId" (ngModelChange)="checkOrderIdChange($event)">
+                                            <span>{{orderCheckIdError}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group no-margin">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <button class="btn btn_shop btn-login form-control">Track Order</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+                <li *ngIf="!loggedIn">
+                    <a (click)="showLogInModal()" class="loginbtn">Log In/ Register</a>
+                </li>
+                <li *ngIf="loggedIn" class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> 
+                        My Account  <i class="fa fa-angle-down"></i> 
+                    </a>
+                    <ul class="dropdown-menu submenu">
+                        <li><a routerLink="/wishlist"> My Wishlist<span class="badge">{{cartAndWishListCount.wishlist || 0}}</span></a></li>
+                        <li><a routerLink="/orders">My Orders</a></li>
+                        <li><a routerLink="/support">Support</a></li>
+                        <li><a routerLink="/settings">Settings</a></li>
+                        <!-- <li><a href="javascript:void(0)" (click)="logOut()">logout</a></li> -->
+                    </ul>
+                </li>
+                <li *ngIf="loggedIn">
+                        <a href="javascript:void(0)" (click)="logOut()">logout</a>
+                </li>
+            </ul>
+        </div>
+        <div class="xs_search">
+            <ng2-completer type="search"  (selected)="searchMethod()" [inputClass]="['form-control', 'header-search']" [datasource]="dataService" [minSearchLength]="2" id="header_search" name="header_search"
+                            [(ngModel)]="searchQuery" placeholder="Search..."
+                            (keyup.enter)="searchMethod()">
+            </ng2-completer>
+            <button class="btn btn_shop" type="submit"> <i class="fa fa-search"></i>   </button>
+        </div>
+      </nav>
+</section>
+<!--===========================================================
+                    Mobile Only Header End
+=========================================================== -->
+
+
+<!--===========================================================
+                      Web Only Header Start
+=========================================================== -->
+<section class="shop_navbar md_sc">
+  <!-- Second navbar for search -->
+  <nav class="navbar navbar-inverse navbar-fixed-top" [ngClass]="{'white_nav': pageSetting[0] == 'header-1' ? true : false, 'dark_nav': pageSetting[0] == 'header-2'}"> <!-- dark_nav -->
+      <div class="container">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#shop-navbar-collapse">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+              </button>
+              <div class="logo">
+                  <a routerLink="">
+                      <div class="media">
+                          <div class="media-left">
+                              <img src="{{shop.logo}}" class="img-responsive" />
+                          </div>
+                          <div class="media-body">
+                              <h3 class="media-heading">{{shop.name}}</h3>
+                              <span>{{shop.slogan || 'slogan'}}</span>
+                          </div>
+                      </div>
+                  </a>
+              </div>
+          </div>
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="shop-navbar-collapse" data-hover="dropdown" data-animations="fadeInDown fadeInRight fadeInUp fadeInLeft">
+              <ul class="nav navbar-nav my-list navbar-right col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                  <li>
+                      <a data-toggle="collapse" href="#nav-collapse3" aria-expanded="false" aria-controls="nav-collapse3">
+                          <img src="../../assets/img/icon_search.svg" alt="shop icon search">
+                      </a>
+                  </li>
+                  <li class="notification" dropdown>
+                      <a class="dropdown-toggle" routerLink="/wishlist">
+                          <img src="../../assets/img/icon_wishlist.svg" alt="shop wishlist cart"> <span class="badge">{{cartAndWishListCount.wishlist || 0}}</span>
+                      </a>
+                  </li>
+                  <li class="notification">
+                      <a class="dropdown-toggle" routerLink="/cart">
+                          <img src="../../assets/img/icon_cart.svg" alt="shop icon cart"> <span class="badge">{{cartAndWishListCount.cart || 0}}</span>
+                      </a>
+
+                  </li>
+                  <li *ngIf="!loggedIn">
+                      <a (click)="showLogInModal()" class="loginbtn">Log In/ Register</a>
+                  </li>
+                  <li *ngIf="loggedIn" dropdown class="onweb">
+                      <a dropdownToggle class="dropdown-toggle">
+                          <img src="{{userInfo.imageUrl || 'https://locopixel-shop.s3.amazonaws.com/images/logo/_1505929215538userPlaceholderDummy.png'}}" alt="">
+                      </a>
+                      <ul *dropdownMenu class="dropdown-menu" role="menu">
+                          <li role="menuitem"><a class="dropdown-item" routerLink="/orders">My Orders</a></li>
+                          <li role="menuitem"><a class="dropdown-item" routerLink="/support">Support</a></li>
+                          <li role="menuitem"><a class="dropdown-item" routerLink="/settings">Settings</a></li>
+                          <li role="menuitem"><a class="dropdown-item" href="javascript:void(0)" (click)="logOut()">logout</a>
+                          </li>
+                      </ul>
+                  </li>
+              </ul>
+              <ul class="nav navbar-nav main-nav col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                  <li dropdown *ngIf="loggedIn" class="onmob">
+                    <a dropdownToggle class="dropdown-toggle">
+                      <div class="media">
+                        <div class="media-left media-middle">
+                          <img
+                            src="{{userInfo.imageUrl || 'https://s3.amazonaws.com/locopixel-shop/images/icons/logo.png'}}"
+                            class="media-object">
+                        </div>
+
+                        <div class="media-body">
+                          <h4 class="media-heading">Signed in as:</h4>
+                          <span class="user_name">{{userInfo.firstName}} {{userInfo.lastName}}</span>
+                        </div>
+
+                        <div class="media-right">
+                          <span class="caret"></span>
+                        </div>
+                      </div>
+                    </a>
+                    <ul *dropdownMenu class="dropdown-menu" role="menu">
+                      <li role="menuitem"><a class="dropdown-item" routerLink="/orders">My Orders</a></li>
+                       <li role="menuitem"><a class="dropdown-item" routerLink="/support">Support</a></li>
+                      <li role="menuitem"><a class="dropdown-item" routerLink="/settings">Settings</a></li>
+                      <li role="menuitem"><a class="dropdown-item" href="javascript:void(0)" (click)="logOut()">logout</a>
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="dropdown">
+                      <a routerLink="/catalogue" routerLinkActive="active" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false">Shop</a>
+                      <ul class="dropdown-menu">
+                          <li><a href="#">Bags</a></li>
+                          <li><a href="#">Shoes</a></li>
+                          <li><a href="#">Caps</a></li>
+                      </ul>
+                  </li>
+                  <li><a routerLink="/catalogue/custom" routerLinkActive="active" *ngIf="haveCustomProductFeature">Customize</a></li>
+                  <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Track Order </a>
+                      <ul class="dropdown-menu trackingid">
+                          <li>
+                              <form (ngSubmit)="checkOrderStatus()" name="form" #checkOrderStatusForm="ngForm" novalidate>
+                                  <div *ngIf="statusErrorMessage" class="alert alert-danger">
+                                      {{ statusErrorMessage }}
+                                  </div>
+                                  <div class="form-group">
+                                      <div class="row">
+                                          <div class="col-md-12">
+                                              <input type="email" class="form-control" placeholder="Email Address" name="email" [ngModel]="orderCheckEmail" (ngModelChange)="checkOrderEmailChange($event)">
+                                              <span>{{orderCheckEmailError}}</span>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="form-group">
+                                      <div class="row">
+                                          <div class="col-md-12">
+                                              <input type="text" class="form-control" placeholder="Order ID" [(ngModel)]="orderCheckId" name="orderId" (ngModelChange)="checkOrderIdChange($event)">
+                                              <span>{{orderCheckIdError}}</span>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="form-group no-margin">
+                                      <div class="row">
+                                          <div class="col-md-12">
+                                              <button class="btn btn_shop btn-login form-control">Track Order</button>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </form>
+                          </li>
+                      </ul>
+                  </li>
+                  <li><a routerLink="/quotations" routerLinkActive="active" *ngIf="loggedIn && haveQuotationFeature">Quotation</a></li>
+                  <div class="collapse nav navbar-nav nav-collapse slide-down" id="nav-collapse3">
+                      <form class="navbar-form navbar-right" role="search" (ngSubmit)="searchMethod()" name="form" #emailForm="ngForm" novalidate>
+                          <div class="form-group">
+
+                            <ng2-completer type="search"  (selected)="searchMethod()" [inputClass]="['form-control', 'header-search']" [datasource]="dataService" [minSearchLength]="2" id="header_search" name="header_search"
+                                           [(ngModel)]="searchQuery" placeholder="Search..."
+                                           (keyup.enter)="searchMethod()"></ng2-completer>
+                            <button type="submit" style="display: none;"></button>
+                          </div>
+                      </form>
+                  </div>
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container -->
+  </nav>
+  <!-- /.navbar -->
+</section>
+<!--===========================================================
+                      Web Only Header End
+=========================================================== -->
+
+<div class="wrapper-main xs-wrapper-main">
+  <app-login *ngIf="!loggedIn" (informLogInEmitter)="knowLoginStatus($event)"></app-login>
+  <router-outlet></router-outlet>
+</div>
+<!--<go-top-button class="btn btn_yellow" [html]="'<i class=\'fa fa-arrow-up\'></i>'" [animate]="true" [speed]="100" [acceleration]="2"-->
+<!--[scrollDistance]="0" [styles]="{}">-->
+<!--</go-top-button>-->
+<app-query></app-query>
+<section [ngClass]="{'white_footer': pageSetting[7] == 'footer-1' ? true : false, 'dark_footer': pageSetting[7] == 'footer-2'}"> <!-- dark_footer -->
+  <div class="row info">
+    <div class="container">
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+
+      <h4>About Store</h4>
+      <p>We could have listed our products on a number of marketplaces, but we wanted to own our brand and build
+        relationships with our customers, along with selling our goods. Such a tool didn’t exist, so we built it for ourselves.</p>
+      <ul class="address">
+        <li *ngIf="shop.address"> <i class="fa fa-map-marker"></i> <span> {{shop.address}}, {{shop.city}}, {{shop.country}} {{shop.zipCode}} </span> </li>
+        <li *ngIf="shop.email"> <i class="fa fa-envelope"></i> <span> {{shop.email}} </span> </li>
+        <li *ngIf="shop.phoneNumber"> <i class="fa fa-phone"></i> <span> {{shop.phoneNumber}} </span> </li>
+      </ul>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-0 col-xs-0"></div>
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+      <h4>Quick Links</h4>
+      <ul>
+        <li> <a routerLink=""> <span> Home </span> </a></li>
+        <li> <a routerLink="/catalogue"> <span> Shop </span> </a></li>
+        <li> <a *ngIf="haveCustomProductFeature" routerLink="/catalogue/custom"> <span> Customize </span> </a></li>
+        <li> <a routerLink="/quotations" *ngIf="loggedIn && haveQuotationFeature"> <span> Quotation </span> </a></li>
+      </ul>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+        <h4>Information</h4>
+        <ul>
+          <li> <a routerLink="/support"> <span> Support </span> </a></li>
+        </ul>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <h4>Follow Us</h4>
+        <form action="">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Enter your email address" aria-describedby="basic-SUBSCRIBE">
+            <span class="input-group-addon" id="basic-SUBSCRIBE"> SUBSCRIBE </span>
+          </div>
+        </form>
+        <ul class="social">
+          <li><a class="fb" href="{{shop.facebookUrl}}" target="_blank"><i class="fa fa-facebook"></i></a></li>
+          <li><a class="gp" href="{{shop.googleUrl}}" target="_blank"><i class="fa fa-google-plus"></i></a></li>
+          <li><a class="tw" href="{{shop.twitterUrl}}" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        </ul>
+    </div>
+  </div>
+</div>
+  <div class="row copyright">
+    <div class="container">
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+      <p>  <i class="fa fa-copyright"></i>  Copyright 2018   {{shop.name}}. All Rights Reserved. </p>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 powered">
+      <p>  Powered by:  Locopixel  </p>
+    </div>
+  </div>
+  </div>
+</section>
+<!-- <footer class="footer" *ngIf="pageSetting[7] == 'footer-1'">
+  <div class="container">
+      <div class="row">
+          <div class="footer_links col-lg-7 col-md-7 col-sm-7 col-xs-12">
+              <ul class="my-list">
+                  <li><a routerLink="/">Home</a></li>
+                  <li><a routerLink="/">About </a></li>
+                  <li><a routerLink="/catalogue">Catalogue</a></li>
+                  <li><a routerLink="/wishlist">Wishlist</a></li>
+                  <li *ngIf="!loggedIn">
+                      <a (click)="showLogInModal()">Account</a>
+                  </li>
+                  <li *ngIf="loggedIn"><a routerLink="/settings">Account</a></li>
+              </ul>
+          </div>
+          <div class="social_link col-lg-5 col-md-5 col-sm-5 col-xs-12 text-right">
+              <ul class="my-list">
+                  <li><a href="{{shop.facebookUrl}}" target="_blank"><i class="fa fa-facebook"></i></a></li>
+                  <li><a href="{{shop.googleUrl}}" target="_blank"><i class="fa fa-google-plus"></i></a></li>
+                  <li><a href="{{shop.twitterUrl}}" target="_blank"><i class="fa fa-youtube"></i></a></li>
+              </ul>
+          </div>
+      </div>
+  </div>
+  <hr>
+  <div class="container">
+      <div class="row">
+          <div class="address col-lg-9 col-md-9 col-sm-6 col-xs-12">
+              <ul class="my-list">
+                  <li *ngIf="shop.address"><span> <i class="fa fa-map-marker"></i> </span> {{shop.address}}, {{shop.city}}, {{shop.country}} {{shop.zipCode}}
+                  </li>
+                  <li *ngIf="shop.phoneNumber"><span> <i class="fa fa-phone"></i> </span> {{shop.phoneNumber}}</li>
+                  <li *ngIf="shop.email"><span> <i class="fa fa-envelope"></i> </span> {{shop.email}}</li>
+              </ul>
+          </div>
+          <div class="copy_right col-lg-3 col-md-3 col-sm-6 col-xs-12 text-right">
+              <span><i class="fa fa-copyright"></i> {{shop.name}}. All Rights Reserved.</span>
+          </div>
+      </div>
+  </div>
+</footer> -->
+<!-- =============================== footer 2 ================================== -->
+<!-- <footer class="footer footer_two" id="footer-2" *ngIf="pageSetting[7] == 'footer-2'">
+  <div class="container">
+      <div class="row">
+          <div class="footer_links col-lg-7 col-md-7 col-sm-7 col-xs-12">
+              <ul class="my-list">
+                  <li><a routerLink="/">Home</a></li>
+                  <li><a routerLink="/">About </a></li>
+                  <li><a routerLink="/catalogue">Catalogue</a></li>
+                  <li><a routerLink="/wishlist">Wishlist</a></li>
+                  <li *ngIf="!loggedIn">
+                      <a (click)="showLogInModal()">Account</a>
+                  </li>
+                  <li *ngIf="loggedIn"><a routerLink="/settings">Account</a></li>
+              </ul>
+          </div>
+          <div class="social_link col-lg-5 col-md-5 col-sm-5 col-xs-12 text-right">
+              <ul class="my-list">
+                  <li><a href="{{shop.facebookUrl}}" target="_blank"><i class="fa fa-facebook"></i></a></li>
+                  <li><a href="{{shop.googleUrl}}" target="_blank"><i class="fa fa-google-plus"></i></a></li>
+                  <li><a href="{{shop.twitterUrl}}" target="_blank"><i class="fa fa-youtube"></i></a></li>
+              </ul>
+          </div>
+      </div>
+  </div>
+  <hr>
+  <div class="container">
+      <div class="row">
+          <div class="address col-lg-9 col-md-9 col-sm-6 col-xs-12">
+              <ul class="my-list">
+                  <li *ngIf="shop.address"><span> <i class="fa fa-map-marker"></i> </span> {{shop.address}}, {{shop.city}}, {{shop.country}} {{shop.zipCode}}
+                  </li>
+                  <li *ngIf="shop.phoneNumber"><span> <i class="fa fa-phone"></i> </span> {{shop.phoneNumber}}</li>
+                  <li *ngIf="shop.email"><span> <i class="fa fa-envelope"></i> </span> {{shop.email}}</li>
+              </ul>
+          </div>
+          <div class="copy_right col-lg-3 col-md-3 col-sm-6 col-xs-12 text-right">
+              <span><i class="fa fa-copyright"></i> {{shop.name}}. All Rights Reserved. </span>
+          </div>
+      </div>
+  </div>
+</footer> -->
+<!-- <section class="newsletters newsletters_two" id="footer-2" *ngIf="pageSetting[7] == 'footer-2'">
+ <div class="container">
+
+   <div class="row no-margin">
+     <div class="col-lg-12 col-md-12 col-sm-12 no-padding">
+       <nav class="navbar navbar-shop">
+         <div class="container">
+           <div class="navbar-header">
+             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                     data-target="#topFixedNavbar">
+               <span class="sr-only">Toggle navigation</span>
+               <span class="icon-bar"></span>
+               <span class="icon-bar"></span>
+               <span class="icon-bar"></span>
+             </button>
+           </div>
+           <div class="collapse navbar-collapse" id="topFixedNavbar">
+             <ul class="nav navbar-nav links">
+               <li><a routerLink="/">Home</a></li>
+               <li><a routerLink="/">About </a></li>
+               <li><a routerLink="/catalogue">Catalogue</a></li>
+               <li><a routerLink="/wishlist">Wishlist</a></li>
+               <li *ngIf="!loggedIn">
+                 <a (click)="showLogInModal()">Account</a>
+               </li>
+               <li *ngIf="loggedIn"><a routerLink="/settings">Account</a></li>
+             </ul>
+             <ul class="nav navbar-nav navbar-right nav-pills">
+               <li><a href="{{shop.facebookUrl}}" target="_blank"><i class="fa fa-facebook"></i></a></li>
+               <li><a href="{{shop.googleUrl}}" target="_blank"><i class="fa fa-google-plus"></i></a></li>
+               <li><a href="{{shop.twitterUrl}}" target="_blank"><i class="fa fa-youtube"></i></a></li>
+             </ul>
+           </div>
+         </div>
+       </nav>
+     </div>
+   </div>
+ </div>
+ </section>
+ <section class="contact_us contact_us_two" *ngIf="pageSetting[7] == 'footer-2'">
+ <div class="container">
+   <div class="row no-margin">
+     <div class="col-lg-12 col-md-12 col-sm-12 no-padding">
+       <div class="contact">
+         <ul>
+           <li *ngIf="shop.address">
+             <i class="fa fa-map-marker"></i>
+             <span>{{shop.address}}, {{shop.city}}, {{shop.country}} {{shop.zipCode}}</span>
+           </li>
+           <li *ngIf="shop.phoneNumber">
+             <i class="fa fa-phone"></i>
+             <span>{{shop.phoneNumber}}</span>
+           </li>
+           <li *ngIf="shop.email">
+             <i class="fa fa-envelope-open-o"></i>
+             <span>{{shop.email}}</span>
+           </li>
+           <li class="rights">
+             <i class="fa fa-copyright"></i>
+             <span>{{shop.name}}. All Rights Reserved.</span>
+           </li>
+         </ul>
+       </div>
+     </div>
+   </div>
+ </div>
+ </section> -->
+<div class="modal fade" id="chkstatus" role="dialog">
+  <div class="modal-dialog modal-sm check_Order_status">
+      <!-- Modal content-->
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" #closeModalBtn>&times;</button>
+              <h4 class="modal-title">Check Order Status</h4>
+          </div>
+          <div class="modal-body">
+              <form (ngSubmit)="checkOrderStatus()" name="form" #checkOrderStatusForm="ngForm" novalidate>
+                  <div *ngIf="statusErrorMessage" class="alert alert-danger">
+                      {{ statusErrorMessage }}
+                  </div>
+                  <div class="form-group">
+                      <div class="row">
+                          <div class="col-md-12">
+                              <input type="email" class="form-control" placeholder="Email Address" name="email" [ngModel]="orderCheckEmail" (ngModelChange)="checkOrderEmailChange($event)">
+                              <span>{{orderCheckEmailError}}</span>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <div class="row">
+                          <div class="col-md-12">
+                              <input type="text" class="form-control" placeholder="Order ID" [(ngModel)]="orderCheckId" name="orderId" (ngModelChange)="checkOrderIdChange($event)">
+                              <span>{{orderCheckIdError}}</span>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <div class="row">
+                          <div class="col-md-12">
+                              <button class="btn btn_shop btn-login form-control"> Check Status</button>
+                          </div>
+                      </div>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
